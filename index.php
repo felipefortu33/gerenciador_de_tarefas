@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Gerenciador de Tarefas</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="container">
@@ -50,7 +51,7 @@
         </tr>
         </thead>
         <tbody id="taskList">
-        <!-- Tarefas são listadas aqui -->
+        <?php include 'list_tasks.php'; ?>
         </tbody>
     </table>
 </div>
