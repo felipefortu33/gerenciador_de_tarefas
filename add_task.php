@@ -1,7 +1,7 @@
 <?php
 
 global $conn;
-include 'db_connection.php';
+include 'db_connect.php';
 
 $title = $_POST['title'];
 $description = $_POST['description'];

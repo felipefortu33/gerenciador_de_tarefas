@@ -1,4 +1,5 @@
 <?php
+global $conn, $conn;
 include 'db_connect.php';
 
 $sql = "SELECT * FROM tasks";
@@ -13,7 +14,7 @@ if ($result->num_rows > 0) {
         echo "<td>" . $row["priority"] . "</td>";
         echo "<td>" . $row["completed"] . "</td>";
         echo "<td class='options'>";
-        echo "<a href='edit_task.php?id=" . $row["id"] . "'>Editar</a>";
+        echo "<a href='edit_task.php?id=" . $row['id'] . "'>Editar</a>";
         echo "<a href='delete_task.php?id=" . $row["id"] . "'>Excluir</a>";
         echo "</td>";
         echo "</tr>";
