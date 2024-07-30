@@ -1,23 +1,37 @@
 <?php
-
 global $conn;
 include 'db_connect.php';
+include 'send_email.php';
 
 $title = $_POST['title'];
 $description = $_POST['description'];
-$deadline = $_POST['deadline'];
+$deadline = !empty($_POST['deadline']) ? $_POST['deadline'] : NULL;
 $priority = $_POST['priority'];
-$completed = isset($POST['completed']) ? 1 : 0;
-$email_reminder = isset($POST['email_reminder']) ? 1 : 0;
+$completed = isset($_POST['completed']) ? 1 : 0;
+$emailReminder = isset($_POST['email_reminder']) ? 1 : 0;
 
-$sql = "INSERT INTO tasks (title, description, deadline, priority, completed, email_reminder)
-VALUES ('$title', '$description', '$deadline', '$priority', '$completed', '$email_reminder')";
+// Preparar a consulta com parâmetros
+$query = "INSERT INTO tasks (title, description, deadline, priority, completed, email_reminder) VALUES (?, ?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("ssssii", $title, $description, $deadline, $priority, $completed, $emailReminder);
 
-if ($conn->query($sql) === TRUE) {
-    echo "New record created successfully";
-}else{
-    echo "Error: " . $sql . "<br>" . $conn->error;
+if ($stmt->execute()) {
+    if ($emailReminder) {
+        $to = 'felipefortu33@outlook.com'; // Substitua pelo e-mail do destinatário
+        $subject = 'Lembrete de Tarefa: ' . $title;
+        $body = 'Você tem uma nova tarefa: ' . $title . '<br>' .
+            'Descrição: ' . $description . '<br>' .
+            'Prazo: ' . $deadline . '<br>' .
+            'Prioridade: ' . $priority;
+
+        sendReminderEmail($to, $subject, $body);
+    }
+
+    header("Location: index.php");
+} else {
+    echo "Erro ao inserir tarefa: " . $stmt->error;
 }
 
+$stmt->close();
 $conn->close();
-header('Location: index.php');
+?>
